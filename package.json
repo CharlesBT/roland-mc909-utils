@@ -1,0 +1,58 @@
+{
+  "name": "roland-mc909-chunk",
+  "version": "1.0.0",
+  "description": "MC909 Library for Chunks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CharlesBT/roland-mc909-chunk.git"
+  },
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=8"
+  },
+  "types": "index.d.ts",
+  "main": "dist-electron/main/index.js",
+  "scripts": {
+    "dev": "concurrently \"pnpm -r --parallel run dev\" \"delay 1.0 && vite\"",
+    "build": "tsc --noEmit && vite build",
+    "protect": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/protect-sources.mts",
+    "electron-builder": "electron-builder --config electron-builder.config.js",
+    "publish": "electron-builder --config electron-builder.config.js --publish=always",
+    "tc": "tsc --noEmit",
+    "test": "vitest && pnpm -r run test",
+    "test:coverage": "vitest run --coverage && pnpm -r run test:coverage",
+    "test:ci": "vitest run && pnpm -r run test:ci",
+    "lint": "eslint --fix .",
+    "format": "prettier --write .",
+    "clean": "rimraf -g ./dist ./dist-* ./release ./docs ./.cache ./.temp ./logs ./test/coverage",
+    "clean:nodemodules": "rimraf -g ./**/node_modules ./**/pnpm-lock.yaml ./**/.pnpm-debug.log",
+    "clean:packages": "pnpm -r --parallel run clean",
+    "clean:all": "pnpm run clean && pnpm run clean:packages && pnpm run clean:nodemodules",
+    "reinstall": "pnpm clean:all && pnpm install",
+    "pkg:update": "pnpm -r update",
+    "pkg:outdated": "pnpm -r outdated",
+    "pkg:peer": "pnpm -r exec ncu --deep --peer",
+    "pkg:syncpack:list": "pnpm exec syncpack list",
+    "pkg:syncpack:mismatches": "pnpm exec syncpack list-mismatches",
+    "cert:win": "electron-builder create-self-signed-cert --publisher divine-desktop",
+    "prepare": "husky"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "divine-audio": "*",
+    "dotenv": "16.4.5"
+  },
+  "devDependencies": {
+    "@charlesbt/eslint-config-custom": "1.3.2",
+    "eslint": "8.57.0",
+    "husky": "9.0.11",
+    "lint-staged": "15.2.4",
+    "prettier": "3.2.5",
+    "ts-node": "10.9.2",
+    "typescript": "5.4.5"
+  }
+}

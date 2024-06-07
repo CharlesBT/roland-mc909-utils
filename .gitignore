@@ -1,0 +1,29 @@
+#PRIVATE
+.private
+
+# NODE
+node_modules
+dist
+dist-*
+build
+release
+
+# .env.*.local
+*.local
+
+# Docs
+docs
+
+# Logs
+logs
+*.log
+*.log*
+*gitlog
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# VITEST
+coverage

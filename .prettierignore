@@ -1,0 +1,25 @@
+# APP
+.cache
+.temp
+test
+logs
+data
+uploads
+
+# NODE
+node_modules
+build
+dist
+pnpm-lock.yaml
+
+# CHROME CONFIG
+vscode-chrome-debug-userdatadir
+
+# VITEST
+coverage
+
+# DOCS
+docs
+
+# MACOSX
+.DS_Store
