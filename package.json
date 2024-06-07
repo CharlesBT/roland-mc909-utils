@@ -8,12 +8,28 @@
   },
   "license": "MIT",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/index.mjs",
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=20.11.0",
     "pnpm": ">=8"
   },
-  "types": "index.d.ts",
-  "main": "dist-electron/main/index.js",
   "scripts": {
     "dev": "concurrently \"pnpm -r --parallel run dev\" \"delay 1.0 && vite\"",
     "build": "tsc --noEmit && vite build",
@@ -39,15 +55,13 @@
     "cert:win": "electron-builder create-self-signed-cert --publisher divine-desktop",
     "prepare": "husky"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
-    "divine-audio": "*",
+    "@uttori/audio-wave": "2.1.0",
     "dotenv": "16.4.5"
   },
   "devDependencies": {
     "@charlesbt/eslint-config-custom": "1.3.2",
+    "@types/node": "20",
     "eslint": "8.57.0",
     "husky": "9.0.11",
     "lint-staged": "15.2.4",
