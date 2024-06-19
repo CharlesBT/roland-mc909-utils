@@ -23,7 +23,7 @@ if (process.env.UTTORI_DATA_DEBUG) {
  * console.log('Chunks:', file.chunks);
  * @class
  */
-class AudioWAV extends DataStream {
+export class AudioWAV extends DataStream {
   /**
    * Creates a new AudioWAV.
    *
@@ -3070,4 +3070,4 @@ class AudioWAV extends DataStream {
   }
 }
 
-module.exports = AudioWAV
+// export { AudioWAV }

@@ -1,9 +1,9 @@
 import fs from 'node:fs'
-import AudioWAV from '@uttori/audio-wave'
+import { AudioWAV } from './audio-wav'
 
 // Read in a WAV file with AudioWAV
 const data = fs.readFileSync('./test/assets/input.wav')
-const { chunks } = AudioWAV.fromFile(data)
+const { chunks } = AudioWAV.fromFile(data, {})
 
 // Remove the header, we will make a new one with our new size.
 chunks.splice(0, 1)
