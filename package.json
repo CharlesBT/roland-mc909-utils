@@ -1,10 +1,10 @@
 {
-  "name": "roland-mc909-chunk",
+  "name": "roland-mc909-utils",
   "version": "1.0.0",
   "description": "MC909 Library for Chunks",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CharlesBT/roland-mc909-chunk.git"
+    "url": "https://github.com/CharlesBT/roland-mc909-utils.git"
   },
   "license": "MIT",
   "private": true,
