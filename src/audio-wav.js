@@ -1,7 +1,9 @@
 import zlib from 'node:zlib'
-import DataBuffer from './data-tools-v3/data-buffer'
-import DataBufferList from './data-tools-v3/data-buffer-list'
-import DataStream from './data-tools-v3/data-stream'
+import DataBuffer from './data-tools-v3/data-buffer.js'
+import DataBufferList from './data-tools-v3/data-buffer-list.js'
+import DataStream from './data-tools-v3/data-stream.js'
+
+const ROLAND_DEVICE = 'roifxvmc'
 
 let debug = (..._) => {}
 /* c8 ignore next */
@@ -1680,7 +1682,7 @@ export class AudioWAV extends DataStream {
     const meterNumerator = acid.readUInt16(true)
 
     // Tempo
-    const tempo = acid.readUInt32(true)
+    const tempo = acid.readFloat32(true)
 
     const value = {
       type,
@@ -1903,7 +1905,7 @@ export class AudioWAV extends DataStream {
     const chunkID = roland.readString(4)
     const size = roland.readUInt32(true)
 
-    // SP-404SX Wave Converter v1.01 on macOS sets this value to `roifxvmc`
+    // SP-404SX Wave Converter v1.01 on macOS sets this value to ROLAND_DEVICE
     const device = roland.readString(8)
 
     // SP-404SX Wave Converter v1.01 on macOS sets this value to `0x04`
@@ -1915,377 +1917,39 @@ export class AudioWAV extends DataStream {
     // SP-404SX Wave Converter v1.01 on macOS sets this value to `0x00`
     const unknown4 = roland.readUInt8()
 
-    // Sample Index starts at 0 for A1 and increases by 12 for each bank, i.e. A1 = 0x00 / 0, A5 = 0x04 / 4, B5 = 0x10 / 16, ..., J12 = 0x77 / 119.
-    const sampleIndex = roland.readUInt8()
-    let sampleLabel = ''
-    /* istanbul ignore next */
-    if (device === 'roifxvmc') {
-      switch (sampleIndex) {
-        case 0:
-          sampleLabel = 'A1'
-          break
-        case 1:
-          sampleLabel = 'A2'
-          break
-        case 2:
-          sampleLabel = 'A3'
-          break
-        case 3:
-          sampleLabel = 'A4'
-          break
-        case 4:
-          sampleLabel = 'A5'
-          break
-        case 5:
-          sampleLabel = 'A6'
-          break
-        case 6:
-          sampleLabel = 'A7'
-          break
-        case 7:
-          sampleLabel = 'A8'
-          break
-        case 8:
-          sampleLabel = 'A9'
-          break
-        case 9:
-          sampleLabel = 'A10'
-          break
-        case 10:
-          sampleLabel = 'A11'
-          break
-        case 11:
-          sampleLabel = 'A12'
-          break
-        case 12:
-          sampleLabel = 'B1'
-          break
-        case 13:
-          sampleLabel = 'B2'
-          break
-        case 14:
-          sampleLabel = 'B3'
-          break
-        case 15:
-          sampleLabel = 'B4'
-          break
-        case 16:
-          sampleLabel = 'B5'
-          break
-        case 17:
-          sampleLabel = 'B6'
-          break
-        case 18:
-          sampleLabel = 'B7'
-          break
-        case 19:
-          sampleLabel = 'B8'
-          break
-        case 20:
-          sampleLabel = 'B9'
-          break
-        case 21:
-          sampleLabel = 'B10'
-          break
-        case 22:
-          sampleLabel = 'B11'
-          break
-        case 23:
-          sampleLabel = 'B12'
-          break
-        case 24:
-          sampleLabel = 'C1'
-          break
-        case 25:
-          sampleLabel = 'C2'
-          break
-        case 26:
-          sampleLabel = 'C3'
-          break
-        case 27:
-          sampleLabel = 'C4'
-          break
-        case 28:
-          sampleLabel = 'C5'
-          break
-        case 29:
-          sampleLabel = 'C6'
-          break
-        case 30:
-          sampleLabel = 'C7'
-          break
-        case 31:
-          sampleLabel = 'C8'
-          break
-        case 32:
-          sampleLabel = 'C9'
-          break
-        case 33:
-          sampleLabel = 'C10'
-          break
-        case 34:
-          sampleLabel = 'C11'
-          break
-        case 35:
-          sampleLabel = 'C12'
-          break
-        case 36:
-          sampleLabel = 'D1'
-          break
-        case 37:
-          sampleLabel = 'D2'
-          break
-        case 38:
-          sampleLabel = 'D3'
-          break
-        case 39:
-          sampleLabel = 'D4'
-          break
-        case 40:
-          sampleLabel = 'D5'
-          break
-        case 41:
-          sampleLabel = 'D6'
-          break
-        case 42:
-          sampleLabel = 'D7'
-          break
-        case 43:
-          sampleLabel = 'D8'
-          break
-        case 44:
-          sampleLabel = 'D9'
-          break
-        case 45:
-          sampleLabel = 'D10'
-          break
-        case 46:
-          sampleLabel = 'D11'
-          break
-        case 47:
-          sampleLabel = 'D12'
-          break
-        case 48:
-          sampleLabel = 'E1'
-          break
-        case 49:
-          sampleLabel = 'E2'
-          break
-        case 50:
-          sampleLabel = 'E3'
-          break
-        case 51:
-          sampleLabel = 'E4'
-          break
-        case 52:
-          sampleLabel = 'E5'
-          break
-        case 53:
-          sampleLabel = 'E6'
-          break
-        case 54:
-          sampleLabel = 'E7'
-          break
-        case 55:
-          sampleLabel = 'E8'
-          break
-        case 56:
-          sampleLabel = 'E9'
-          break
-        case 57:
-          sampleLabel = 'E10'
-          break
-        case 58:
-          sampleLabel = 'E11'
-          break
-        case 59:
-          sampleLabel = 'E12'
-          break
-        case 60:
-          sampleLabel = 'F1'
-          break
-        case 61:
-          sampleLabel = 'F2'
-          break
-        case 62:
-          sampleLabel = 'F3'
-          break
-        case 63:
-          sampleLabel = 'F4'
-          break
-        case 64:
-          sampleLabel = 'F5'
-          break
-        case 65:
-          sampleLabel = 'F6'
-          break
-        case 66:
-          sampleLabel = 'F7'
-          break
-        case 67:
-          sampleLabel = 'F8'
-          break
-        case 68:
-          sampleLabel = 'F9'
-          break
-        case 69:
-          sampleLabel = 'F10'
-          break
-        case 70:
-          sampleLabel = 'F11'
-          break
-        case 71:
-          sampleLabel = 'F12'
-          break
-        case 72:
-          sampleLabel = 'G1'
-          break
-        case 73:
-          sampleLabel = 'G2'
-          break
-        case 74:
-          sampleLabel = 'G3'
-          break
-        case 75:
-          sampleLabel = 'G4'
-          break
-        case 76:
-          sampleLabel = 'G5'
-          break
-        case 77:
-          sampleLabel = 'G6'
-          break
-        case 78:
-          sampleLabel = 'G7'
-          break
-        case 79:
-          sampleLabel = 'G8'
-          break
-        case 80:
-          sampleLabel = 'G9'
-          break
-        case 81:
-          sampleLabel = 'G10'
-          break
-        case 82:
-          sampleLabel = 'G11'
-          break
-        case 83:
-          sampleLabel = 'G12'
-          break
-        case 84:
-          sampleLabel = 'H1'
-          break
-        case 85:
-          sampleLabel = 'H2'
-          break
-        case 86:
-          sampleLabel = 'H3'
-          break
-        case 87:
-          sampleLabel = 'H4'
-          break
-        case 88:
-          sampleLabel = 'H5'
-          break
-        case 89:
-          sampleLabel = 'H6'
-          break
-        case 90:
-          sampleLabel = 'H7'
-          break
-        case 91:
-          sampleLabel = 'H8'
-          break
-        case 92:
-          sampleLabel = 'H9'
-          break
-        case 93:
-          sampleLabel = 'H10'
-          break
-        case 94:
-          sampleLabel = 'H11'
-          break
-        case 95:
-          sampleLabel = 'H12'
-          break
-        case 96:
-          sampleLabel = 'I1'
-          break
-        case 97:
-          sampleLabel = 'I2'
-          break
-        case 98:
-          sampleLabel = 'I3'
-          break
-        case 99:
-          sampleLabel = 'I4'
-          break
-        case 100:
-          sampleLabel = 'I5'
-          break
-        case 101:
-          sampleLabel = 'I6'
-          break
-        case 102:
-          sampleLabel = 'I7'
-          break
-        case 103:
-          sampleLabel = 'I8'
-          break
-        case 104:
-          sampleLabel = 'I9'
-          break
-        case 105:
-          sampleLabel = 'I10'
-          break
-        case 106:
-          sampleLabel = 'I11'
-          break
-        case 107:
-          sampleLabel = 'I12'
-          break
-        case 108:
-          sampleLabel = 'J1'
-          break
-        case 109:
-          sampleLabel = 'J2'
-          break
-        case 110:
-          sampleLabel = 'J3'
-          break
-        case 111:
-          sampleLabel = 'J4'
-          break
-        case 112:
-          sampleLabel = 'J5'
-          break
-        case 113:
-          sampleLabel = 'J6'
-          break
-        case 114:
-          sampleLabel = 'J7'
-          break
-        case 115:
-          sampleLabel = 'J8'
-          break
-        case 116:
-          sampleLabel = 'J9'
-          break
-        case 117:
-          sampleLabel = 'J10'
-          break
-        case 118:
-          sampleLabel = 'J11'
-          break
-        case 119:
-          sampleLabel = 'J12'
-          break
-        default: {
-          debug('Unknown Pad:', sampleIndex)
-        }
-      }
-    }
+    /*
+    Start Point: chunk 36-39
+    Loop Start: chunk 40-43
+    End Point: chunk 44-47
+    Samples: chunk 48-51
+
+    Start Fine: chunk 192
+    Loop Start Fine: chunk 193
+    Loop End Fine: chunk 194
+    Loop Mode 0-4: chunk 195
+    Loop Tune: chunk 196
+    Original Key: chunk 197
+    Time Stretch Type (0-9): chunk 198
+    BPM: chunk 202-203
+    */
+
+    const name = roland.readString(16)
+    const startPoint = roland.readUInt32(true)
+    const loopStart = roland.readUInt32(true)
+    const loopEnd = roland.readUInt32(true)
+    const samples = roland.readUInt32(true)
+    roland.seek(192)
+    const startFine = roland.readUInt8()
+    const loopStartFine = roland.readUInt8()
+    const loopEndFine = roland.readUInt8()
+    const loopMode = roland.readUInt8()
+    const loopTune = roland.readUInt8()
+    const key = roland.readUInt8()
+    const timestretchType = roland.readUInt8()
+
+    // BPM
+    roland.seek(202)
+    const bpm = roland.readUInt16(true)
 
     const value = {
       chunkID,
@@ -2295,8 +1959,19 @@ export class AudioWAV extends DataStream {
       unknown2,
       unknown3,
       unknown4,
-      sampleIndex,
-      sampleLabel,
+      name,
+      startPoint,
+      loopStart,
+      loopEnd,
+      samples,
+      startFine,
+      loopStartFine,
+      loopEndFine,
+      loopMode,
+      loopTune,
+      key,
+      timestretchType,
+      bpm,
     }
 
     debug('decodeRLND =', JSON.stringify(value, null, 2))
@@ -2314,20 +1989,42 @@ export class AudioWAV extends DataStream {
    *
    * @static
    * @param {object} data - The JSON values to set in the RLND chunk.
-   * @param {string} data.device - An 8 character string representing the device label. SP-404SX Wave Converter v1.01 on macOS sets this value to `roifxvmc`.
+   * @param {string} data.device - An 8 character string representing the device label. SP-404SX Wave Converter v1.01 on macOS sets this value to ROLAND_DEVICE.
    * @param {number} [data.unknown1=4] - Unknown, SP-404SX Wave Converter v1.01 on macOS sets this value to `0x04`.
    * @param {number} [data.unknown2=0] - Unknown, SP-404SX Wave Converter v1.01 on macOS sets this value to `0x00`.
    * @param {number} [data.unknown3=0] - Unknown, SP-404SX Wave Converter v1.01 on macOS sets this value to `0x00`.
    * @param {number} [data.unknown4=0] - Unknown, SP-404SX Wave Converter v1.01 on macOS sets this value to `0x00`.
-   * @param {number|string} data.sampleIndex - The pad the sample plays on, between `0` and `119` as a number or the pad label, `A1` - `J12`. Only the SP404SX (device === `roifxvmc`) provided values can be converted from string corrently, and if it is not found it will defailt to `0` / `A1`.
+   * @param {number|string} data.sampleIndex - The pad the sample plays on, between `0` and `119` as a number or the pad label, `A1` - `J12`. Only the SP404SX (device === ROLAND_DEVICE) provided values can be converted from string corrently, and if it is not found it will defailt to `0` / `A1`.
    * @returns {Buffer} The new RLND chunk.
    * @static
    * @see {@link https://www.roland.com/global/support/by_product/sp-404sx/updates_drivers/|SP-404SX Support Page}
    */
   static encodeRLND(data) {
-    const { device, unknown1 = 4, unknown2 = 0, unknown3 = 0, unknown4 = 0 } = data
-    let { sampleIndex } = data
-    debug('encodeRLND:', device, unknown1, unknown2, unknown3, unknown4, sampleIndex)
+    /*
+    Default:
+      "name": "                ",
+      "startPoint": 0,
+      "loopStart": 0,
+      "loopEnd": 99168, = samples
+      "samples": 99168,
+      "startFine": 0,
+      "loopStartFine": 0,
+      "loopEndFine": 0,
+      "loopMode": 1, 0:FWD, 1:ONESHOT
+      "loopTune": 0,
+      "key": 60, // C4
+      "timestretchType": 4, 4:TYPE05
+      "bpm": 7800
+
+    */
+
+    const device = ROLAND_DEVICE
+    const unknown1 = 184
+    const unknown2 = 0
+    const unknown3 = 0
+    const unknown4 = 0
+
+    debug('encodeRLND:', device, unknown1, unknown2, unknown3, unknown4)
     // Padding
     const buffer = Buffer.alloc(466, 0)
 
@@ -2337,7 +2034,7 @@ export class AudioWAV extends DataStream {
     // Chunk Size
     buffer.writeUInt32LE(458, 4)
 
-    // Device, ie: 'roifxvmc'
+    // Device, ie: ROLAND_DEVICE
     buffer.write(device, 8)
 
     // Unknown
@@ -2346,379 +2043,36 @@ export class AudioWAV extends DataStream {
     buffer.writeUInt8(unknown3, 18)
     buffer.writeUInt8(unknown4, 19)
 
-    // Determine the sample index from the string.
-    if (device === 'roifxvmc' && typeof sampleIndex === 'string') {
-      /* istanbul ignore next */
-      switch (sampleIndex.toUpperCase()) {
-        case 'A1':
-          sampleIndex = 0
-          break
-        case 'A2':
-          sampleIndex = 1
-          break
-        case 'A3':
-          sampleIndex = 2
-          break
-        case 'A4':
-          sampleIndex = 3
-          break
-        case 'A5':
-          sampleIndex = 4
-          break
-        case 'A6':
-          sampleIndex = 5
-          break
-        case 'A7':
-          sampleIndex = 6
-          break
-        case 'A8':
-          sampleIndex = 7
-          break
-        case 'A9':
-          sampleIndex = 8
-          break
-        case 'A10':
-          sampleIndex = 9
-          break
-        case 'A11':
-          sampleIndex = 10
-          break
-        case 'A12':
-          sampleIndex = 11
-          break
-        case 'B1':
-          sampleIndex = 12
-          break
-        case 'B2':
-          sampleIndex = 13
-          break
-        case 'B3':
-          sampleIndex = 14
-          break
-        case 'B4':
-          sampleIndex = 15
-          break
-        case 'B5':
-          sampleIndex = 16
-          break
-        case 'B6':
-          sampleIndex = 17
-          break
-        case 'B7':
-          sampleIndex = 18
-          break
-        case 'B8':
-          sampleIndex = 19
-          break
-        case 'B9':
-          sampleIndex = 20
-          break
-        case 'B10':
-          sampleIndex = 21
-          break
-        case 'B11':
-          sampleIndex = 22
-          break
-        case 'B12':
-          sampleIndex = 23
-          break
-        case 'C1':
-          sampleIndex = 24
-          break
-        case 'C2':
-          sampleIndex = 25
-          break
-        case 'C3':
-          sampleIndex = 26
-          break
-        case 'C4':
-          sampleIndex = 27
-          break
-        case 'C5':
-          sampleIndex = 28
-          break
-        case 'C6':
-          sampleIndex = 29
-          break
-        case 'C7':
-          sampleIndex = 30
-          break
-        case 'C8':
-          sampleIndex = 31
-          break
-        case 'C9':
-          sampleIndex = 32
-          break
-        case 'C10':
-          sampleIndex = 33
-          break
-        case 'C11':
-          sampleIndex = 34
-          break
-        case 'C12':
-          sampleIndex = 35
-          break
-        case 'D1':
-          sampleIndex = 36
-          break
-        case 'D2':
-          sampleIndex = 37
-          break
-        case 'D3':
-          sampleIndex = 38
-          break
-        case 'D4':
-          sampleIndex = 39
-          break
-        case 'D5':
-          sampleIndex = 40
-          break
-        case 'D6':
-          sampleIndex = 41
-          break
-        case 'D7':
-          sampleIndex = 42
-          break
-        case 'D8':
-          sampleIndex = 43
-          break
-        case 'D9':
-          sampleIndex = 44
-          break
-        case 'D10':
-          sampleIndex = 45
-          break
-        case 'D11':
-          sampleIndex = 46
-          break
-        case 'D12':
-          sampleIndex = 47
-          break
-        case 'E1':
-          sampleIndex = 48
-          break
-        case 'E2':
-          sampleIndex = 49
-          break
-        case 'E3':
-          sampleIndex = 50
-          break
-        case 'E4':
-          sampleIndex = 51
-          break
-        case 'E5':
-          sampleIndex = 52
-          break
-        case 'E6':
-          sampleIndex = 53
-          break
-        case 'E7':
-          sampleIndex = 54
-          break
-        case 'E8':
-          sampleIndex = 55
-          break
-        case 'E9':
-          sampleIndex = 56
-          break
-        case 'E10':
-          sampleIndex = 57
-          break
-        case 'E11':
-          sampleIndex = 58
-          break
-        case 'E12':
-          sampleIndex = 59
-          break
-        case 'F1':
-          sampleIndex = 60
-          break
-        case 'F2':
-          sampleIndex = 61
-          break
-        case 'F3':
-          sampleIndex = 62
-          break
-        case 'F4':
-          sampleIndex = 63
-          break
-        case 'F5':
-          sampleIndex = 64
-          break
-        case 'F6':
-          sampleIndex = 65
-          break
-        case 'F7':
-          sampleIndex = 66
-          break
-        case 'F8':
-          sampleIndex = 67
-          break
-        case 'F9':
-          sampleIndex = 68
-          break
-        case 'F10':
-          sampleIndex = 69
-          break
-        case 'F11':
-          sampleIndex = 70
-          break
-        case 'F12':
-          sampleIndex = 71
-          break
-        case 'G1':
-          sampleIndex = 72
-          break
-        case 'G2':
-          sampleIndex = 73
-          break
-        case 'G3':
-          sampleIndex = 74
-          break
-        case 'G4':
-          sampleIndex = 75
-          break
-        case 'G5':
-          sampleIndex = 76
-          break
-        case 'G6':
-          sampleIndex = 77
-          break
-        case 'G7':
-          sampleIndex = 78
-          break
-        case 'G8':
-          sampleIndex = 79
-          break
-        case 'G9':
-          sampleIndex = 80
-          break
-        case 'G10':
-          sampleIndex = 81
-          break
-        case 'G11':
-          sampleIndex = 82
-          break
-        case 'G12':
-          sampleIndex = 83
-          break
-        case 'H1':
-          sampleIndex = 84
-          break
-        case 'H2':
-          sampleIndex = 85
-          break
-        case 'H3':
-          sampleIndex = 86
-          break
-        case 'H4':
-          sampleIndex = 87
-          break
-        case 'H5':
-          sampleIndex = 88
-          break
-        case 'H6':
-          sampleIndex = 89
-          break
-        case 'H7':
-          sampleIndex = 90
-          break
-        case 'H8':
-          sampleIndex = 91
-          break
-        case 'H9':
-          sampleIndex = 92
-          break
-        case 'H10':
-          sampleIndex = 93
-          break
-        case 'H11':
-          sampleIndex = 94
-          break
-        case 'H12':
-          sampleIndex = 95
-          break
-        case 'I1':
-          sampleIndex = 96
-          break
-        case 'I2':
-          sampleIndex = 97
-          break
-        case 'I3':
-          sampleIndex = 98
-          break
-        case 'I4':
-          sampleIndex = 99
-          break
-        case 'I5':
-          sampleIndex = 100
-          break
-        case 'I6':
-          sampleIndex = 101
-          break
-        case 'I7':
-          sampleIndex = 102
-          break
-        case 'I8':
-          sampleIndex = 103
-          break
-        case 'I9':
-          sampleIndex = 104
-          break
-        case 'I10':
-          sampleIndex = 105
-          break
-        case 'I11':
-          sampleIndex = 106
-          break
-        case 'I12':
-          sampleIndex = 107
-          break
-        case 'J1':
-          sampleIndex = 108
-          break
-        case 'J2':
-          sampleIndex = 109
-          break
-        case 'J3':
-          sampleIndex = 110
-          break
-        case 'J4':
-          sampleIndex = 111
-          break
-        case 'J5':
-          sampleIndex = 112
-          break
-        case 'J6':
-          sampleIndex = 113
-          break
-        case 'J7':
-          sampleIndex = 114
-          break
-        case 'J8':
-          sampleIndex = 115
-          break
-        case 'J9':
-          sampleIndex = 116
-          break
-        case 'J10':
-          sampleIndex = 117
-          break
-        case 'J11':
-          sampleIndex = 118
-          break
-        case 'J12':
-          sampleIndex = 119
-          break
-        default: {
-          debug('Unknown Pad:', sampleIndex)
-          sampleIndex = 0
-        }
-      }
-    }
+    // data
+    const {
+      name,
+      startPoint,
+      loopStart,
+      loopEnd,
+      samples,
+      startFine,
+      loopStartFine,
+      loopEndFine,
+      loopMode,
+      loopTune,
+      key,
+      timestretchType,
+      bpm,
+    } = data
 
-    // Sample Index
-    buffer.writeUInt8(sampleIndex, 20)
+    buffer.write(name, 20, 16, 'utf8')
+    buffer.writeUInt32LE(startPoint, 36)
+    buffer.writeUInt32LE(loopStart, 40)
+    buffer.writeUInt32LE(loopEnd, 44)
+    buffer.writeUInt32LE(samples, 48)
+    buffer.writeUInt8(startFine, 192)
+    buffer.writeUInt8(loopStartFine, 193)
+    buffer.writeUInt8(loopEndFine, 194)
+    buffer.writeUInt8(loopMode, 195)
+    buffer.writeUInt8(loopTune, 196)
+    buffer.writeUInt8(key, 197)
+    buffer.writeUInt8(timestretchType, 198)
+    buffer.writeUInt16LE(bpm, 202)
 
     debug('Buffer:', buffer.toString('hex'))
     return buffer

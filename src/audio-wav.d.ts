@@ -27,12 +27,19 @@ export class AudioWAV {
   static decodeSMPL(chunk: string | Buffer): object
   static decodeRLND(chunk: string | Buffer): object
   static encodeRLND(data: {
-    device: string
-    unknown1?: number
-    unknown2?: number
-    unknown3?: number
-    unknown4?: number
-    sampleIndex: number | string
+    name: string
+    startPoint?: number
+    loopStart?: number
+    loopEnd?: number
+    samples: number
+    startFine?: number
+    loopStartFine?: number
+    loopEndFine?: number
+    loopMode?: number
+    loopTune?: number
+    key?: number
+    timestretchType?: number
+    bpm?: number
   }): Buffer
   static decodeJUNK(
     chunk: string | Buffer,

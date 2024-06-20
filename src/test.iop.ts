@@ -15,7 +15,7 @@ if (roland_index > 0) {
 }
 
 // Create a RLND chunk and set the pad to J12
-const rlnd = AudioWAV.encodeRLND({ device: 'roifspsx', sampleIndex: 'J12' })
+const rlnd = AudioWAV.encodeRLND({ device: 'roifxvmc', sampleIndex: 'J12' })
 
 // Add the new RLND after the format chunk
 const index = chunks.findIndex((chunk) => chunk.type === 'format')
