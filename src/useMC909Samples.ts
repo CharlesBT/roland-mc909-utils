@@ -18,6 +18,7 @@ export function useMC909Samples() {
       }
     }
   }
+
   function checkFiles(dir: string) {
     function writeFileSync(data: string, filename = 'output.log') {
       fs.writeFileSync(path.join(dir, filename), data)
@@ -59,10 +60,11 @@ export function useMC909Samples() {
   function getRolandName(file: string): string {
     let name = path.parse(file).name
     if (name.length > 16) name = name.slice(0, 16)
-    while (name.length < 16) {
-      name += ' '
-    }
-    return name
+    return name.padEnd(16, ' ')
+    // while (name.length < 16) {
+    //   name += ' '
+    // }
+    // return name
   }
 
   /*
@@ -209,10 +211,28 @@ export function useMC909Samples() {
     }
   }
 
+  function renameFiles(dir: string, index: number = 1) {
+    checkFilesExtension(dir)
+    const files = listFilesRecursiveSync(dir)
+    for (const file of files) {
+      const name = path.parse(file).name
+      const ext = path.extname(file)
+      const newName = `smpl${index.toString().padStart(4, '0')}${ext}`
+      const newFilename = path.join(path.dirname(file), newName)
+      fs.renameSync(file, newFilename)
+      const { WaveFile } = wavefile // workaround to avoid ts-node issue
+      const wav = new WaveFile(fs.readFileSync(newFilename))
+      const fmt = wav.fmt as any
+      if (fmt.numChannels === 2) index = index + 2
+      else index++
+    }
+  }
+
   return {
     checkFilesExtension,
     checkFiles,
     updateSample,
     updateDir,
+    renameFiles,
   }
 }

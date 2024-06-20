@@ -8,9 +8,6 @@ dependencies:
   dotenv:
     specifier: 16.4.5
     version: 16.4.5
-  fse:
-    specifier: ^4.0.1
-    version: 4.0.1
   wavefile:
     specifier: 11.0.0
     version: 11.0.0
@@ -1405,11 +1402,6 @@ packages:
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
-
-  /fse@4.0.1:
-    resolution: {integrity: sha512-5XLUrweQvJxSJKhBe3XjimHSJ2EUhYOG+K2tLQy8I9kp78Fa3CgUXqxAZWxE9+fsvnI5GVkHl4NDqbf1tSb93Q==}
-    engines: {node: '>=4.0.0'}
-    dev: false
 
   /function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}

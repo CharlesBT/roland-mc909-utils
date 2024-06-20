@@ -57,7 +57,6 @@
   },
   "dependencies": {
     "dotenv": "16.4.5",
-    "fse": "4.0.1",
     "wavefile": "11.0.0"
   },
   "devDependencies": {
