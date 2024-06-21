@@ -28,7 +28,7 @@
     "module": "es2022" /* Specify what module code is generated. */,
     "outDir": "dist/esm" /* Redirect output to the directory. */
   },
-  "include": ["src/**/*", "types/**/*", "script/check-filenames.ts"],
+  "include": ["src/**/*"],
   "ts-node": {
     // ts-node config
     "esm": true // Tell ts-node CLI to install the --loader automatically, explained below
