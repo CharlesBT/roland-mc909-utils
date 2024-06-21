@@ -1,7 +1,7 @@
 {
   "name": "roland-mc909-utils",
   "version": "1.0.0",
-  "description": "MC909 Library for Chunks",
+  "description": "MC909 Utils Library for Roland MC909 chunk",
   "repository": {
     "type": "git",
     "url": "https://github.com/CharlesBT/roland-mc909-utils.git"

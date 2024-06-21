@@ -7,67 +7,9 @@ import type { smpl, FMT, ACID } from './types'
 
 const { WaveFile } = wavefile // workaround to avoid ts-node issue
 
-export function useMC909Samples() {
-  function checkFilesExtension(dir: string) {
-    const files = listFilesRecursiveSync(dir)
+const LOG_FILE = 'output.log'
 
-    for (const file of files) {
-      const ext = path.extname(file)
-      if (ext !== '.wav') {
-        console.error(`ERROR with ${file}\r\nExtension must be .wav`)
-      }
-    }
-  }
-
-  function checkFiles(dir: string) {
-    function writeFileSync(data: string, filename = 'output.log') {
-      fs.writeFileSync(path.join(dir, filename), data)
-    }
-
-    checkFilesExtension(dir)
-
-    let out = ''
-
-    const files = listFilesRecursiveSync(dir)
-
-    // check filename length > 16
-    for (const file of files) {
-      const name = path.parse(file).name
-      if (name.length > 16) {
-        out += file + '\r\n'
-        console.info(file)
-      }
-    }
-
-    // check sample rate and bitdepth
-    for (const file of files) {
-      try {
-        const wav = new WaveFile(fs.readFileSync(file))
-        const fmt = wav.fmt as any
-        if (!fmt.numChannels) out += `numChannels is missing: ${file}\r\n`
-        if (!fmt.blockAlign) out += `blockAlign is missing: ${file}\r\n`
-        if (fmt.sampleRate !== 44100) out += `SampleRate must be 44100: ${file}\r\n`
-        if (fmt.bitsPerSample !== 16) out += `bitsPerSample must be 16: ${file}\r\n`
-      } catch (e) {
-        out += `ERROR with : ${file}\r\n`
-        // console.error(`ERROR with ${file}\r\n${(e as Error).message}`)
-      }
-    }
-
-    writeFileSync(out)
-  }
-
-  function getRolandName(file: string): string {
-    let name = path.parse(file).name
-    if (name.length > 16) name = name.slice(0, 16)
-    return name.padEnd(16, ' ')
-    // while (name.length < 16) {
-    //   name += ' '
-    // }
-    // return name
-  }
-
-  /*
+/*
   name: chunk 20
   Start Point: chunk 36-39
   Loop Start: chunk 40-43
@@ -84,6 +26,76 @@ export function useMC909Samples() {
   BPM: chunk 202-203
   */
 
+export function useMC909Samples() {
+  let out = ''
+
+  function log(text: string) {
+    out += `${text}\r\n`
+    console.info(text)
+  }
+
+  function checkFilesExtension(dir: string) {
+    console.info(`Processing ${dir} ...`)
+    console.info('Checking file extensions ...')
+    const files = listFilesRecursiveSync(dir)
+    for (const file of files) {
+      const ext = path.extname(file)
+      if (ext !== '.wav') {
+        log(`ERROR with ${file}\r\nExtension must be .wav`)
+      }
+    }
+  }
+
+  function checkFilenames(dir: string) {
+    console.info(`Processing ${dir} ...`)
+    console.info('Checking filenames ...')
+    const files = listFilesRecursiveSync(dir)
+    // check filename length > 16
+    for (const file of files) {
+      const name = path.parse(file).name
+      if (name.length > 16) {
+        log(`wrong filename: ${file}`)
+      }
+    }
+  }
+
+  function checkSampleRateAndBitDepth(dir: string) {
+    console.info(`Processing ${dir} ...`)
+    console.info('Checking samplerate and bitdepth ...')
+    const files = listFilesRecursiveSync(dir)
+
+    // check sample rate and bitdepth
+    for (const file of files) {
+      try {
+        const wav = new WaveFile(fs.readFileSync(file))
+        const fmt = wav.fmt as any
+        if (!fmt.numChannels) log(`numChannels is missing: ${file}`)
+        if (!fmt.blockAlign) log(`blockAlign is missing: ${file}`)
+        if (fmt.sampleRate !== 44100) log(`SampleRate must be 44100: ${file}`)
+        if (fmt.bitsPerSample !== 16) log(`bitsPerSample must be 16: ${file}`)
+      } catch (e) {
+        log(`ERROR with : ${file}`)
+        // console.error(`ERROR with ${file}\r\n${(e as Error).message}`)
+      }
+    }
+  }
+
+  function checkFiles(dir: string) {
+    checkFilesExtension(dir)
+    checkFilenames(dir)
+    checkSampleRateAndBitDepth(dir)
+  }
+
+  function getRolandName(file: string): string {
+    let name = path.parse(file).name
+    if (name.length > 16) name = name.slice(0, 16)
+    return name.padEnd(16, ' ')
+    // while (name.length < 16) {
+    //   name += ' '
+    // }
+    // return name
+  }
+
   function createRolandChunk(opts: {
     file: string
     wav: wavefile.WaveFile
@@ -99,8 +111,7 @@ export function useMC909Samples() {
       loopMode = 0 // FWD
       loopStart = sampleloop.dwStart
       loopEnd = sampleloop.dwEnd + 1
-      // console.log('loopStart: ' + loopStart)
-      // console.log('loopEnd: ' + loopEnd)
+      // loopEnd = sampleloop.dwEnd
     }
 
     // Create a ROLAND chunk
@@ -123,7 +134,7 @@ export function useMC909Samples() {
     return roland
   }
 
-  function updateSample(file: string) {
+  function updateRolandChunk(file: string) {
     const { chunks } = AudioWAV.fromFile(fs.readFileSync(file), {})
 
     const fmt: FMT = chunks.find((chunk) => chunk.type === 'format').value
@@ -197,29 +208,32 @@ export function useMC909Samples() {
     fs.writeFileSync(file, output)
   }
 
-  function updateDir(dir: string) {
+  function updateDirWithRolandChunk(dir: string) {
+    console.info(`Processing ${dir} ...`)
+    console.info('Updating files with Roland chunk ...')
     const files = listFilesRecursiveSync(dir)
-
     checkFilesExtension(dir)
-
     for (const file of files) {
       try {
-        updateSample(file)
+        updateRolandChunk(file)
       } catch (e) {
-        console.error(`ERROR with ${file}\r\n${(e as Error).message}`)
+        log(`ERROR with ${file}\r\n${(e as Error).message}`)
       }
     }
   }
 
   function renameFiles(dir: string, index: number = 1) {
+    console.info(`Processing ${dir} ...`)
+    console.info('Renaming files ...')
     checkFilesExtension(dir)
     const files = listFilesRecursiveSync(dir)
     for (const file of files) {
-      const name = path.parse(file).name
+      // const name = path.parse(file).name
       const ext = path.extname(file)
       const newName = `smpl${index.toString().padStart(4, '0')}${ext}`
       const newFilename = path.join(path.dirname(file), newName)
       fs.renameSync(file, newFilename)
+      console.info(newName)
       const { WaveFile } = wavefile // workaround to avoid ts-node issue
       const wav = new WaveFile(fs.readFileSync(newFilename))
       const fmt = wav.fmt as any
@@ -230,9 +244,11 @@ export function useMC909Samples() {
 
   return {
     checkFilesExtension,
+    checkFilenames,
+    checkSampleRateAndBitDepth,
     checkFiles,
-    updateSample,
-    updateDir,
+    updateRolandChunk,
+    updateDirWithRolandChunk,
     renameFiles,
   }
 }
