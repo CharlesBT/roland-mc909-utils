@@ -242,6 +242,39 @@ export function useMC909Samples() {
     }
   }
 
+  function isMonoWith2Channels(file: string) {
+    try {
+      console.info(`Processing ${file} ...`)
+      const r = true
+      const { WaveFile } = wavefile // workaround to avoid ts-node issue
+      const wav = new WaveFile(fs.readFileSync(file))
+      const fmt = wav.fmt as any
+      if (fmt.numChannels < 2) return false
+      if (fmt.numChannels === 2) {
+        const rightSamples = wav.getSamples()[1] as unknown as Float64Array
+        const leftSamples = wav.getSamples()[0] as unknown as Float64Array
+        for (let i = 0; i < rightSamples.length; i++) {
+          if (rightSamples[i] !== leftSamples[i]) return false
+        }
+      }
+      return r
+    } catch (e) {
+      log(`ERROR with ${file}\r\n${(e as Error).message}`)
+    }
+  }
+
+  function getListOfMonoWith2Channels(dir: string) {
+    console.info(`Scanning ${dir} ...`)
+    console.info('Searching for mono files with 2 channels ...')
+    const directoryFiles = listFilesRecursiveSync(dir)
+    const files = directoryFiles.filter((file) => path.extname(file).toLowerCase() === '.wav')
+    const r: string[] = []
+    for (const file of files) {
+      if (isMonoWith2Channels(file)) r.push(file)
+    }
+    return r
+  }
+
   return {
     checkFilesExtension,
     checkFilenames,
@@ -250,5 +283,6 @@ export function useMC909Samples() {
     updateRolandChunk,
     updateDirWithRolandChunk,
     renameFiles,
+    getListOfMonoWith2Channels,
   }
 }
