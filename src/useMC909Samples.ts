@@ -244,7 +244,7 @@ export function useMC909Samples() {
 
   function isMonoWith2Channels(file: string) {
     try {
-      console.info(`Processing ${file} ...`)
+      // console.info(`Processing ${file} ...`)
       const r = true
       const { WaveFile } = wavefile // workaround to avoid ts-node issue
       const wav = new WaveFile(fs.readFileSync(file))
