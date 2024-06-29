@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import wavefile from 'wavefile'
 import { AudioWAV } from './audio-wav.js'
-import { listFilesRecursiveSync } from './utils.js'
+import { listFilesRecursiveSync, listWavFilesRecursiveSync } from './utils.js'
 import type { smpl, FMT, ACID } from './types'
 
 const { WaveFile } = wavefile // workaround to avoid ts-node issue
@@ -242,6 +242,33 @@ export function useMC909Samples() {
     }
   }
 
+  function getChannels(file: string) {
+    try {
+      // console.info(`Processing ${file} ...`)
+      const r = true
+      const { WaveFile } = wavefile // workaround to avoid ts-node issue
+      const wav = new WaveFile(fs.readFileSync(file))
+      const fmt = wav.fmt as any
+      return fmt.numChannels
+    } catch (e) {
+      log(`ERROR with ${file}\r\n${(e as Error).message}`)
+    }
+  }
+
+  function countSampleSlots(dir: string) {
+    console.info(`Processing ${dir} ...`)
+    console.info('Counting sample slots ...')
+    const files = listWavFilesRecursiveSync(dir)
+    let i = 0
+    for (const file of files) {
+      const channels = getChannels(file)
+      if (channels === 1) i++
+      else if (channels === 2) i += 2
+      else console.error(`ERROR: ${file} has ${channels} channels`)
+    }
+    console.info(`Total sample slots required: ${i}`)
+  }
+
   function isMonoWith2Channels(file: string) {
     try {
       // console.info(`Processing ${file} ...`)
@@ -280,6 +307,7 @@ export function useMC909Samples() {
     checkFilenames,
     checkSampleRateAndBitDepth,
     checkFiles,
+    countSampleSlots,
     updateRolandChunk,
     updateDirWithRolandChunk,
     renameFiles,

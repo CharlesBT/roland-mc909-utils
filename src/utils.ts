@@ -26,3 +26,11 @@ export function listFilesRecursiveSync(dir: string, fileList: string[] = []) {
   })
   return fileList
 }
+
+export function listWavFilesRecursiveSync(dir: string, fileList: string[] = []) {
+  const files = listFilesRecursiveSync(dir)
+  return files.filter((file) => {
+    const ext = path.extname(file).toLowerCase()
+    return ext === '.wav'
+  })
+}
