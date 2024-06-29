@@ -3,7 +3,7 @@ import fse from 'fs-extra'
 import { useMC909Samples } from '../src/useMC909Samples.js'
 
 const SAMPLE_ROOT_DIR = path.normalize('H:/_MC909')
-const TEMP_ROOT_DIR = path.normalize('H:/_TMP')
+const TEMP_ROOT_DIR = path.normalize('H:/_MC909_EXPORT')
 
 const MC909Samples = useMC909Samples()
 const files = MC909Samples.getListOfMonoWith2Channels(SAMPLE_ROOT_DIR)
