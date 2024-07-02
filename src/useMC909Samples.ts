@@ -127,7 +127,7 @@ export function useMC909Samples() {
       loopMode,
       loopTune: 0,
       key: 60,
-      timestretchType: 4, // Auto sync method, Decreasing this value will optimize the sound for more rapid phrases, and increasing this value will optimize the sound for slower phrases.
+      timestretchType: 9, // Auto sync method, Decreasing this value will optimize the sound for more rapid phrases, and increasing this value will optimize the sound for slower phrases.
       bpm: opts.bpm || 0,
     })
 
