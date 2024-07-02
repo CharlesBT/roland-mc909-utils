@@ -90,10 +90,6 @@ export function useMC909Samples() {
     let name = path.parse(file).name
     if (name.length > 16) name = name.slice(0, 16)
     return name.padEnd(16, ' ')
-    // while (name.length < 16) {
-    //   name += ' '
-    // }
-    // return name
   }
 
   function createRolandChunk(opts: {
