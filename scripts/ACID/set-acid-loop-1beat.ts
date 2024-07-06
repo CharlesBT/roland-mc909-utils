@@ -1,4 +1,5 @@
 import { useACIDSamples } from '../../src/useACIDSamples.js'
+import { writeReport } from '../../src/report.js'
 
 const SAMPLE_ROOT_DIR = 'H:/_ACID'
 
@@ -8,4 +9,6 @@ const acidSamples = useACIDSamples()
   beats: number of beats used fot ACIDized loops
   tempo: tempo used for ACID Beatmapped
 */
-acidSamples.updateDirWithAcidChunk(SAMPLE_ROOT_DIR, 0, 16)
+acidSamples.updateDirWithAcidChunk(SAMPLE_ROOT_DIR, 0, 1)
+
+writeReport()

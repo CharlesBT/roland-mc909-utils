@@ -2,29 +2,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import wavefile from 'wavefile'
 import { AudioWAV } from './audio-wav.js'
-import { listFilesRecursiveSync } from './utils.js'
-import type { FMT } from './types.js'
+import { log } from './report.js'
+import { checkFilesExtension, listFilesRecursiveSync } from './utils.js'
+import type { FMT, ACID } from './types.js'
 
 export function useACIDSamples() {
-  let out = ''
-
-  function log(text: string) {
-    out += `${text}\r\n`
-    console.info(text)
-  }
-
-  function checkFilesExtension(dir: string) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Checking file extensions ...')
-    const files = listFilesRecursiveSync(dir)
-    for (const file of files) {
-      const ext = path.extname(file)
-      if (ext !== '.wav') {
-        log(`ERROR with ${file}\r\nExtension must be .wav`)
-      }
-    }
-  }
-
   function encodeACID(data: { type: 0 | 1 | 28; beats?: number; tempo?: number }) {
     const type = data.type
     const rootNote = 60
@@ -128,10 +110,10 @@ export function useACIDSamples() {
   }
 
   function updateDirWithAcidChunk(dir: string, type: 0 | 1 | 28, beats?: number, tempo?: number) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Updating files with Acid chunk ...')
-    const files = listFilesRecursiveSync(dir)
     checkFilesExtension(dir)
+    log(`Processing ${dir} ...`)
+    log('Updating files with Acid chunk ...')
+    const files = listFilesRecursiveSync(dir)
     for (const file of files) {
       try {
         updateAcidChunk(file, type, beats, tempo)
@@ -141,8 +123,55 @@ export function useACIDSamples() {
     }
   }
 
+  function checkDirLoopTempo(dir: string, tempo: number) {
+    checkFilesExtension(dir)
+    log(`Processing ${dir} ...`)
+    log(`Checking files tempo: ${tempo} ...`)
+    const files = listFilesRecursiveSync(dir)
+    const { WaveFile } = wavefile // workaround to avoid ts-node issue
+    for (const file of files) {
+      const { chunks } = AudioWAV.fromFile(fs.readFileSync(file), {})
+      const wav = new WaveFile(fs.readFileSync(file))
+      const fmt: FMT = chunks.find((chunk) => chunk.type === 'format').value
+      if (!fmt.channels) throw new Error(`channels is missing, ${file}`)
+      if (!fmt.blockAlign) throw new Error(`blockAlign is missing, ${file}`)
+
+      // sample size
+      const samples = wav.getSamples()
+      let sampleSize = 0
+      if (fmt.channels === 1) sampleSize = samples.length
+      if (fmt.channels === 2) sampleSize = (samples[0] as unknown as Float64Array).length
+      if (!fmt.sampleRate) throw new Error(`sampleRate is missing, ${file}`)
+      // console.log('sampleSize: ' + sampleSize)
+
+      // tempo from ACIDized WAV
+      let bpm = 0
+      const acid = chunks.find((chunk) => chunk.type === 'acid')
+      if (acid) {
+        const duration = sampleSize / fmt.sampleRate
+        const acidProps = acid.value as ACID
+        switch (acidProps.type) {
+          case 0: // ACIDized loops
+            if (acidProps.meterDenominator === 4 && acidProps.meterNumerator === 4) {
+              bpm = Math.round((acidProps.beats / duration) * 60)
+              if (bpm !== tempo) {
+                log(`ERROR with ${file}\r\nTempo is ${bpm} must be ${tempo}`)
+              }
+            }
+            break
+          default:
+            log(`ERROR with ${file}\r\nNot an ACIDized loop`)
+            break
+        }
+      } else {
+        log(`ERROR with ${file}\r\nACID chunk not found`)
+      }
+    }
+  }
+
   return {
     updateAcidChunk,
     updateDirWithAcidChunk,
+    checkDirLoopTempo,
   }
 }

@@ -1,6 +1,7 @@
 import path from 'node:path'
 import fse from 'fs-extra'
 import { useMC909Samples } from '../../src/useMC909Samples.js'
+import { writeReport } from '../../src/report.js'
 
 const SAMPLE_ROOT_DIR = path.normalize('H:/_MC909')
 const TEMP_ROOT_DIR = path.normalize('H:/_MC909_EXPORT')
@@ -14,3 +15,5 @@ for (const file of files) {
   fse.ensureDirSync(dir)
   fse.copySync(file, dest)
 }
+
+writeReport()

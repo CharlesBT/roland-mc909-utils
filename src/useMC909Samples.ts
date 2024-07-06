@@ -2,12 +2,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import wavefile from 'wavefile'
 import { AudioWAV } from './audio-wav.js'
-import { listFilesRecursiveSync, listWavFilesRecursiveSync } from './utils.js'
+import { log } from './report.js'
+import { checkFilesExtension, listFilesRecursiveSync, listWavFilesRecursiveSync } from './utils.js'
 import type { smpl, FMT, ACID } from './types'
 
 const { WaveFile } = wavefile // workaround to avoid ts-node issue
-
-const LOG_FILE = 'output.log'
 
 /*
   name: chunk 20
@@ -27,28 +26,9 @@ const LOG_FILE = 'output.log'
   */
 
 export function useMC909Samples() {
-  let out = ''
-
-  function log(text: string) {
-    out += `${text}\r\n`
-    console.info(text)
-  }
-
-  function checkFilesExtension(dir: string) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Checking file extensions ...')
-    const files = listFilesRecursiveSync(dir)
-    for (const file of files) {
-      const ext = path.extname(file)
-      if (ext !== '.wav') {
-        log(`ERROR with ${file}\r\nExtension must be .wav`)
-      }
-    }
-  }
-
   function checkFilenames(dir: string) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Checking filenames ...')
+    log(`Processing ${dir} ...`)
+    log('Checking filenames ...')
     const files = listFilesRecursiveSync(dir)
     // check filename length > 16
     for (const file of files) {
@@ -60,8 +40,8 @@ export function useMC909Samples() {
   }
 
   function checkSampleRateAndBitDepth(dir: string) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Checking samplerate and bitdepth ...')
+    log(`Processing ${dir} ...`)
+    log('Checking samplerate and bitdepth ...')
     const files = listFilesRecursiveSync(dir)
 
     // check sample rate and bitdepth
@@ -205,10 +185,10 @@ export function useMC909Samples() {
   }
 
   function updateDirWithRolandChunk(dir: string) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Updating files with Roland chunk ...')
-    const files = listFilesRecursiveSync(dir)
     checkFilesExtension(dir)
+    log(`Processing ${dir} ...`)
+    log('Updating files with Roland chunk ...')
+    const files = listFilesRecursiveSync(dir)
     for (const file of files) {
       try {
         updateRolandChunk(file)
@@ -219,9 +199,9 @@ export function useMC909Samples() {
   }
 
   function renameFiles(dir: string, index: number = 1) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Renaming files ...')
     checkFilesExtension(dir)
+    log(`Processing ${dir} ...`)
+    log('Renaming files ...')
     const files = listFilesRecursiveSync(dir)
     for (const file of files) {
       // const name = path.parse(file).name
@@ -229,7 +209,7 @@ export function useMC909Samples() {
       const newName = `smpl${index.toString().padStart(4, '0')}${ext}`
       const newFilename = path.join(path.dirname(file), newName)
       fs.renameSync(file, newFilename)
-      console.info(newName)
+      log(newName)
       const { WaveFile } = wavefile // workaround to avoid ts-node issue
       const wav = new WaveFile(fs.readFileSync(newFilename))
       const fmt = wav.fmt as any
@@ -240,7 +220,7 @@ export function useMC909Samples() {
 
   function getChannels(file: string) {
     try {
-      // console.info(`Processing ${file} ...`)
+      // log(`Processing ${file} ...`)
       const r = true
       const { WaveFile } = wavefile // workaround to avoid ts-node issue
       const wav = new WaveFile(fs.readFileSync(file))
@@ -252,8 +232,8 @@ export function useMC909Samples() {
   }
 
   function countSampleSlots(dir: string) {
-    console.info(`Processing ${dir} ...`)
-    console.info('Counting sample slots ...')
+    log(`Processing ${dir} ...`)
+    log('Counting sample slots ...')
     const files = listWavFilesRecursiveSync(dir)
     let i = 0
     for (const file of files) {
@@ -262,12 +242,12 @@ export function useMC909Samples() {
       else if (channels === 2) i += 2
       else console.error(`ERROR: ${file} has ${channels} channels`)
     }
-    console.info(`Total sample slots required: ${i}`)
+    log(`Total sample slots required: ${i}`)
   }
 
   function isMonoWith2Channels(file: string) {
     try {
-      // console.info(`Processing ${file} ...`)
+      // log(`Processing ${file} ...`)
       const r = true
       const { WaveFile } = wavefile // workaround to avoid ts-node issue
       const wav = new WaveFile(fs.readFileSync(file))
@@ -287,8 +267,8 @@ export function useMC909Samples() {
   }
 
   function getListOfMonoWith2Channels(dir: string) {
-    console.info(`Scanning ${dir} ...`)
-    console.info('Searching for mono files with 2 channels ...')
+    log(`Scanning ${dir} ...`)
+    log('Searching for mono files with 2 channels ...')
     const directoryFiles = listFilesRecursiveSync(dir)
     const files = directoryFiles.filter((file) => path.extname(file).toLowerCase() === '.wav')
     const r: string[] = []

@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { log } from './report.js'
 
 /**
  * Recursively lists all files in a directory and its subdirectories.
@@ -33,4 +34,16 @@ export function listWavFilesRecursiveSync(dir: string, fileList: string[] = []) 
     const ext = path.extname(file).toLowerCase()
     return ext === '.wav'
   })
+}
+
+export function checkFilesExtension(dir: string) {
+  log(`Processing ${dir} ...`)
+  log('Checking file extensions ...')
+  const files = listFilesRecursiveSync(dir)
+  for (const file of files) {
+    const ext = path.extname(file)
+    if (ext !== '.wav') {
+      log(`ERROR with ${file}\r\nExtension must be .wav`)
+    }
+  }
 }
