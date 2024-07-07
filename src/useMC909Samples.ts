@@ -111,77 +111,83 @@ export function useMC909Samples() {
   }
 
   function updateRolandChunk(file: string) {
-    const { chunks } = AudioWAV.fromFile(fs.readFileSync(file), {})
+    // log(`Processing ${file} ...`)
 
-    const fmt: FMT = chunks.find((chunk) => chunk.type === 'format').value
-    if (!fmt.channels) throw new Error(`channels is missing, ${file}`)
-    if (!fmt.blockAlign) throw new Error(`blockAlign is missing, ${file}`)
-    if (fmt.sampleRate !== 44100) throw new Error(`SampleRate must be 44100, ${file}`)
-    if (fmt.bitsPerSample !== 16) throw new Error(`bitsPerSample must be 16, ${file}`)
+    try {
+      const { chunks } = AudioWAV.fromFile(fs.readFileSync(file), {})
 
-    const { WaveFile } = wavefile // workaround to avoid ts-node issue
-    const wav = new WaveFile(fs.readFileSync(file))
+      const fmt: FMT = chunks.find((chunk) => chunk.type === 'format').value
+      if (!fmt.channels) throw new Error(`channels is missing, ${file}`)
+      if (!fmt.blockAlign) throw new Error(`blockAlign is missing, ${file}`)
+      if (fmt.sampleRate !== 44100) throw new Error(`SampleRate must be 44100, ${file}`)
+      if (fmt.bitsPerSample !== 16) throw new Error(`bitsPerSample must be 16, ${file}`)
 
-    // sample size
-    const samples = wav.getSamples()
-    let sampleSize = 0
-    if (fmt.channels === 1) sampleSize = samples.length
-    if (fmt.channels === 2) sampleSize = (samples[0] as unknown as Float64Array).length
-    // console.log('sampleSize: ' + sampleSize)
+      const { WaveFile } = wavefile // workaround to avoid ts-node issue
+      const wav = new WaveFile(fs.readFileSync(file))
 
-    // Remove the header, we will make a new one with our new size.
-    chunks.splice(0, 1)
+      // sample size
+      const samples = wav.getSamples()
+      let sampleSize = 0
+      if (fmt.channels === 1) sampleSize = samples.length
+      if (fmt.channels === 2) sampleSize = (samples[0] as unknown as Float64Array).length
+      // console.log('sampleSize: ' + sampleSize)
 
-    // ROLAND chunk
-    const roland_index = chunks.findIndex((chunk) => chunk.type === 'roland')
-    // Remove any existing RLND chunks, should be after `fmt `
-    if (roland_index > 0) {
-      chunks.splice(roland_index, 1)
-    }
+      // Remove the header, we will make a new one with our new size.
+      chunks.splice(0, 1)
 
-    // tempo from ACIDized WAV
-    let bpm = 0
-    const acid = chunks.find((chunk) => chunk.type === 'acid')
-    if (acid) {
-      const duration = sampleSize / fmt.sampleRate
-      const acidProps = acid.value as ACID
-      switch (acidProps.type) {
-        case 0: // ACIDized loops
-          if (acidProps.meterDenominator === 4 && acidProps.meterNumerator === 4) {
-            bpm = Math.round((acidProps.beats / duration) * 60 * 100)
-          }
-          break
-        case 28: // ACID Beatmapped
-          bpm = Math.round(acid.value.tempo * 100)
-          break
+      // ROLAND chunk
+      const roland_index = chunks.findIndex((chunk) => chunk.type === 'roland')
+      // Remove any existing RLND chunks, should be after `fmt `
+      if (roland_index > 0) {
+        chunks.splice(roland_index, 1)
       }
+
+      // tempo from ACIDized WAV
+      let bpm = 0
+      const acid = chunks.find((chunk) => chunk.type === 'acid')
+      if (acid) {
+        const duration = sampleSize / fmt.sampleRate
+        const acidProps = acid.value as ACID
+        switch (acidProps.type) {
+          case 0: // ACIDized loops
+            if (acidProps.meterDenominator === 4 && acidProps.meterNumerator === 4) {
+              bpm = Math.round((acidProps.beats / duration) * 60 * 100)
+            }
+            break
+          case 28: // ACID Beatmapped
+            bpm = Math.round(acid.value.tempo * 100)
+            break
+        }
+      }
+
+      const roland = createRolandChunk({ file, wav, sampleSize, bpm })
+
+      // Add the new ROLAND chunk after the format chunk
+      const index = chunks.findIndex((chunk) => chunk.type === 'format')
+      chunks.splice(index + 1, 0, { type: 'roland', chunk: roland })
+
+      // Calculate the total size, include `WAVE` text (4 bytes)
+      const size = chunks.reduce((total, chunk) => {
+        total += chunk.chunk.length
+        return total
+      }, 4)
+
+      // Build the binary data
+      const header = AudioWAV.encodeHeader({ size })
+      const parts = chunks.reduce(
+        (arr, chunk) => {
+          arr.push(Buffer.from(chunk.chunk))
+          return arr
+        },
+        [header],
+      )
+      const output = Buffer.concat(parts)
+
+      // Write file, *.WAV as that is what the offical software uses.
+      fs.writeFileSync(file, output)
+    } catch (e) {
+      log(`ERROR with ${file}\r\n${(e as Error).message}`)
     }
-
-    const roland = createRolandChunk({ file, wav, sampleSize, bpm })
-
-    // Add the new ROLAND chunk after the format chunk
-    const index = chunks.findIndex((chunk) => chunk.type === 'format')
-    chunks.splice(index + 1, 0, { type: 'roland', chunk: roland })
-
-    // Calculate the total size, include `WAVE` text (4 bytes)
-    const size = chunks.reduce((total, chunk) => {
-      total += chunk.chunk.length
-      return total
-    }, 4)
-
-    // Build the binary data
-    const header = AudioWAV.encodeHeader({ size })
-    const parts = chunks.reduce(
-      (arr, chunk) => {
-        arr.push(Buffer.from(chunk.chunk))
-        return arr
-      },
-      [header],
-    )
-    const output = Buffer.concat(parts)
-
-    // Write file, *.WAV as that is what the offical software uses.
-    fs.writeFileSync(file, output)
   }
 
   function updateDirWithRolandChunk(dir: string) {
