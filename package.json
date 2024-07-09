@@ -61,7 +61,7 @@
     "wavefile": "11.0.0"
   },
   "devDependencies": {
-    "@charlesbt/eslint-config-custom": "1.3.2",
+    "@charlesbt/eslint-config-custom": "1.3.3",
     "@types/debug": "4.1.12",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "20",
