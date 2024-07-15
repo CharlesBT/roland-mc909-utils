@@ -16,6 +16,10 @@ Scripts solve the following issues:
 - TS-NODE to run the scripts as they are written in TypeScript
 - VSCode (recommended)
 
+## Installation
+
+- npm i or pnpm i to install the dependencies
+
 ## Features
 
 ### For samples loops
@@ -64,10 +68,6 @@ Support ACID chunk in wav files:
 ## CHUNK Scripts
 
 - dump-chunks: dump all chunks of a wav file to chunk.json format
-
-## Installation
-
-- npm i or pnpm i to install the dependencies
 
 ## Misc
 
