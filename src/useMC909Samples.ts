@@ -4,6 +4,7 @@ import wavefile from 'wavefile'
 import { AudioWAV } from './audio-wav.js'
 import { log } from './report.js'
 import { checkFilesExtension, listFilesRecursiveSync, listWavFilesRecursiveSync } from './utils.js'
+import { defaultMidiKeyMap, allowedKeys } from './midiKeymap.js'
 import type { smpl, FMT, ACID } from './types'
 
 const { WaveFile } = wavefile // workaround to avoid ts-node issue
@@ -66,6 +67,21 @@ export function useMC909Samples() {
     checkSampleRateAndBitDepth(dir)
   }
 
+  function extractMidiKeyFromFilename(file: string) {
+    const filenameWithoutExtension = path.basename(file, path.extname(file))
+    const lastSpace = filenameWithoutExtension.lastIndexOf(' ')
+    const scale = filenameWithoutExtension.substring(lastSpace).trim()
+    const key = scale.replace('m', '')
+    if (key.length) {
+      if (allowedKeys.includes(key)) {
+        // log(`${file} detected key : ${key}`)
+        const midiKey = defaultMidiKeyMap.get(key + '3')
+        return midiKey
+      }
+    }
+    return undefined
+  }
+
   function getRolandName(file: string): string {
     let name = path.parse(file).name
     if (name.length > 16) name = name.slice(0, 16)
@@ -77,6 +93,7 @@ export function useMC909Samples() {
     wav: wavefile.WaveFile
     sampleSize: number
     bpm?: number
+    key?: number
   }) {
     // get sample loop
     let loopStart = 0
@@ -102,9 +119,9 @@ export function useMC909Samples() {
       loopEndFine: 0,
       loopMode,
       loopTune: 0,
-      key: 60,
+      key: typeof opts.key === 'number' ? opts.key : 60,
       timestretchType: 9, // Auto sync method, Decreasing this value will optimize the sound for more rapid phrases, and increasing this value will optimize the sound for slower phrases.
-      bpm: opts.bpm || 0,
+      bpm: typeof opts.bpm === 'number' ? opts.bpm : 0,
     })
 
     return roland
@@ -160,7 +177,11 @@ export function useMC909Samples() {
         }
       }
 
-      const roland = createRolandChunk({ file, wav, sampleSize, bpm })
+      // extract key form filename
+      const key = extractMidiKeyFromFilename(file)
+      // console.log('key: ' + key)
+
+      const roland = createRolandChunk({ file, wav, sampleSize, bpm, key })
 
       // Add the new ROLAND chunk after the format chunk
       const index = chunks.findIndex((chunk) => chunk.type === 'format')
