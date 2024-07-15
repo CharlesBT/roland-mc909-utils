@@ -55,7 +55,7 @@ Support ACID chunk in wav files:
 - set-acid-loop-4beat: set ACIDized loop length in beats : 4 beats loop length
 - set-acid-loop-16beat: set ACIDized loop length in beats : 16 beats loop length
 - set-acid-oneshot: set ACID oneshot metadata
-- check-acid-loop-tempo : check ACID loop tempo for a targetted tempo
+- check-acid-loop-tempo : check ACID loop tempo for a targetted tempo, set TARGET_TEMPO_BPM to the desired tempo
 
 ## MC-909 Scripts
 
