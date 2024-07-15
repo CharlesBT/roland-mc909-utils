@@ -1,7 +1,7 @@
 {
   "name": "roland-mc909-utils",
   "version": "1.0.0",
-  "description": "Roland MC-909 Groovebox Scripts Utilities for ACIDizing and preparing samples",
+  "description": "Roland MC-909 Groovebox Scripts Utilities for ACIDizing and preparing samples, BULK IMPORT",
   "repository": {
     "type": "git",
     "url": "https://github.com/CharlesBT/roland-mc909-utils.git"
