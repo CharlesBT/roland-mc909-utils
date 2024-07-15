@@ -35,6 +35,7 @@ Support ACID chunk in wav files:
 ## Sample preparation
 
 - Although the wavefile package support resampling and bitdepth reduction, they are not implemented in the scripts yet, samples for MC-909 must be 44.1Khz 16bits stereo or mono, so you must prepare your samples before using the scripts with a batch processing tool like SoundForge or EZ CD Audio Convert to prepare the samples to the 44.1Khz samplerate and 16 bit depth.
+- for oneshots samples, root key can be provided directly in the filename like this : BA MySample Cm.wav or BA MySample C.wav, the root key is extracted from the filename and set in the MC-909 sample metadata, supported root keys are : C, Cm, C#, C#m, D, Dm, D#, D#m, E, Em, F, Fm, F#, F#m, G, Gm, G#, G#m, A, Am, A#, A#m, B, Bm with C being a C3 (midi note 60), C# being a C#3 (midi note 61) and so one until B being a B3 (midi note 71)
 
 ## Scripts usage
 
