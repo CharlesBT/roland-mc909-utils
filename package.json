@@ -1,10 +1,30 @@
 {
   "name": "roland-mc909-utils",
   "version": "1.0.0",
-  "description": "MC909 Utils Library for Roland MC909 chunk",
+  "description": "Roland MC-909 Groovebox Scripts Utilities for ACIDizing and preparing samples",
   "repository": {
     "type": "git",
     "url": "https://github.com/CharlesBT/roland-mc909-utils.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CharlesBT/roland-mc909-utils/issues"
+  },
+  "homepage": "https://github.com/CharlesBT/roland-mc909-utils#readme",
+  "keywords": [
+    "MC-909",
+    "MC909",
+    "Roland",
+    "Groovebox",
+    "Sampler",
+    "Samples",
+    "ACID",
+    "ACIDized",
+    "Chunk"
+  ],
+  "author": {
+    "name": "Charles Brébant",
+    "email": "charles.brebant@gmail.com",
+    "url": "https://github.com/CharlesBT"
   },
   "license": "MIT",
   "private": true,
