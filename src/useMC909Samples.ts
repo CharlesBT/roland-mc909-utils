@@ -107,7 +107,7 @@ export function useMC909Samples() {
       // loopEnd = sampleloop.dwEnd
     }
 
-    // Create a ROLAND chunk
+    // Create a ROLAND MC-909 chunk
     const roland = AudioWAV.encodeRLND({
       name: getRolandName(opts.file),
       startPoint: 0,
