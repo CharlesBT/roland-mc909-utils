@@ -69,13 +69,14 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 
 - 5-process-dir : mains script to process all the samples in the SAMPLE_ROOT_DIR and subdirectories and rename the samples to smplxxxx.wav format where xxxx is the sample number of MC-909 starting at SAMPLE_START_INDEX, the folders and subfolders are processed by alphabetical order.
 - This script check wav format 44.1kHz/16bits and creates the Roland MC909 chunk metadata for each sample with
+- sample name based on the filename
 - for loops :
   - tempo based on ACID metadata, beatmapped or ACIDized loop length in beats
-- for oneshot :
+- for oneshots :
   - write loop points based on WAV sustain loop points
   - write root key based on filename
 
-## CHUNK Scripts
+## DUMP CHUNK Scripts
 
 - dump-chunks: dump all chunks of a wav file to chunk.json format
 
