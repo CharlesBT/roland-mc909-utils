@@ -76,7 +76,7 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
   - write loop points based on WAV sustain loop points
   - write root key based on filename
 
-## DUMP CHUNK Scripts
+## DUMP CHUNK Script
 
 - dump-chunks: dump all chunks of a wav file to chunk.json format
 
