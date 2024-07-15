@@ -39,11 +39,6 @@
       }
     }
   },
-  "types": "./dist/types/index.d.ts",
-  "main": "./dist/index.mjs",
-  "files": [
-    "dist"
-  ],
   "engines": {
     "node": ">=20.11.0",
     "pnpm": ">=8"
