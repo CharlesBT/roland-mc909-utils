@@ -45,7 +45,7 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 ## Scripts usage
 
 - All scripts are located in ./scripts directory
-- Before running any scripts, edit SAMPLE_ROOT_DIR to the location of your samples that must be imported to the MC-909, the scripts will process all the samples in the directory and subdirectories and rename the samples to smplxxxx.wav format, where xxxx is the sample number of MC-909 starting at SAMPLE_START_INDEX, the folders and subfolders are processed by alphabetical order.
+- Before running any scripts, edit SAMPLE_ROOT_DIR to the location of your samples that must be imported to the MC-909, the scripts will process all the samples in the directory and subdirectories.
 - The script can be run directly from the VSCode run icon or with the following command : or `ts-node ./scripts/scriptname.ts` or `node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/scriptname.ts`
 - a script report is generated at the root of this package : ./report.log
 
@@ -64,7 +64,16 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 - 2-check-names : check if the samples are named correctly and respect the 16 characters limitation of the MC-909
 - 3-check-samples : check if the samples are 44.1Khz 16bits stereo or mono, which is the sample format used by MC-909
 - 4-count-sampleslots : count the number of sampleslots used by all the samples contained in the SAMPLE_ROOT_DIR
+
+### 5-process-dir script
+
 - 5-process-dir : mains script to process all the samples in the SAMPLE_ROOT_DIR and subdirectories and rename the samples to smplxxxx.wav format where xxxx is the sample number of MC-909 starting at SAMPLE_START_INDEX, the folders and subfolders are processed by alphabetical order.
+- This script check wav format 44.1kHz/16bits and creates the Roland MC909 chunk metadata for each sample with
+- for loops :
+  - tempo based on ACID metadata, beatmapped or ACIDized loop length in beats
+- for oneshot :
+  - write loop points based on WAV sustain loop points
+  - write root key based on filename
 
 ## CHUNK Scripts
 
