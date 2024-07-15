@@ -8,7 +8,7 @@ const MC909Samples = useMC909Samples()
 MC909Samples.updateDirWithRolandChunk(SAMPLE_ROOT_DIR)
 
 /*
-WARNING if there are empty slot between samples, the loading is longer
+WARNING if there are empty slot between samples, the sample loading get longer on the MC909
 */
 
 MC909Samples.renameFiles(SAMPLE_ROOT_DIR, SAMPLE_START_INDEX)
