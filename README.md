@@ -45,7 +45,7 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 ## Scripts usage
 
 - All scripts are located in ./scripts directory
-- Before running any scripts, edit SAMPLE_ROOT_DIR to the location of your samples that must be imported to the MC-909, the scripts will process all the samples in the directory and subdirectories and rename the samples to smplxxxx.wav format, where xxxx is the sample number of MC-909, the folders and subfolders are processed by alphabetical order.
+- Before running any scripts, edit SAMPLE_ROOT_DIR to the location of your samples that must be imported to the MC-909, the scripts will process all the samples in the directory and subdirectories and rename the samples to smplxxxx.wav format, where xxxx is the sample number of MC-909 starting at SAMPLE_START_INDEX, the folders and subfolders are processed by alphabetical order.
 - The script can be run directly from the VSCode run icon or with the following command : or `ts-node ./scripts/scriptname.ts` or `node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/scriptname.ts`
 - a script report is generated at the root of this package : ./report.log
 
