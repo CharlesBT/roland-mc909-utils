@@ -56,7 +56,7 @@ Support ACID chunk in wav files:
 - 2-check-names : check if the samples are named correctly and respect the 16 characters limitation of the MC-909
 - 3-check-samples : check if the samples are 44.1Khz 16bits stereo or mono, which is the sample format used by MC-909
 - 4-count-sampleslots : count the number of sampleslots used by all the samples contained in the SAMPLE_ROOT_DIR
-- 5-process-dir : mains script to process all the samples in the SAMPLE_ROOT_DIR and subdirectories and rename the samples to smplxxxx.wav format, where xxxx is the sample number of MC-909, the folders and subfolders are processed by alphabetical order.
+- 5-process-dir : mains script to process all the samples in the SAMPLE_ROOT_DIR and subdirectories and rename the samples to smplxxxx.wav format where xxxx is the sample number of MC-909 starting at SAMPLE_START_INDEX, the folders and subfolders are processed by alphabetical order.
 
 ## CHUNK Scripts
 
