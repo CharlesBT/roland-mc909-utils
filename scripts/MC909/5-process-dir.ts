@@ -2,7 +2,7 @@ import { useMC909Samples } from '../../src/useMC909Samples.js'
 import { writeReport } from '../../src/report.js'
 
 const SAMPLE_ROOT_DIR = 'H:/_MC909'
-const SAMPLE_START_INDEX = 3
+const SAMPLE_START_INDEX = 3 // start index for the first sample e.g. 3 = smpl0003.wav
 
 const MC909Samples = useMC909Samples()
 MC909Samples.updateDirWithRolandChunk(SAMPLE_ROOT_DIR)
