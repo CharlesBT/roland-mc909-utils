@@ -46,9 +46,6 @@
   "scripts": {
     "dev": "concurrently \"pnpm -r --parallel run dev\" \"delay 1.0 && vite\"",
     "build": "tsc --noEmit && vite build",
-    "protect": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/protect-sources.mts",
-    "electron-builder": "electron-builder --config electron-builder.config.js",
-    "publish": "electron-builder --config electron-builder.config.js --publish=always",
     "tc": "tsc --noEmit",
     "test": "vitest && pnpm -r run test",
     "test:coverage": "vitest run --coverage && pnpm -r run test:coverage",
@@ -63,9 +60,6 @@
     "pkg:update": "pnpm -r update",
     "pkg:outdated": "pnpm -r outdated",
     "pkg:peer": "pnpm -r exec ncu --deep --peer",
-    "pkg:syncpack:list": "pnpm exec syncpack list",
-    "pkg:syncpack:mismatches": "pnpm exec syncpack list-mismatches",
-    "cert:win": "electron-builder create-self-signed-cert --publisher divine-desktop",
     "prepare": "husky"
   },
   "dependencies": {
