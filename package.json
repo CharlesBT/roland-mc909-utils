@@ -26,7 +26,6 @@
     "url": "https://github.com/CharlesBT"
   },
   "license": "MIT",
-  "private": true,
   "type": "module",
   "exports": {
     ".": {
