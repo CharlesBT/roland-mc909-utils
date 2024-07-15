@@ -5,7 +5,7 @@
 This is a set of scripts for ACIDizing and preparing WAV files samples, oneshots and audio loops for Roland MC-909 Groovebox sampler.
 These scripts solve the following issues :
 
-- no more need to import manually one by one or use third party tool like MC-909SampleEditor ! just copy all prepared samples to the SmartMedia card or the MC-909 internal storage, bulk process all your samples in one go !
+- no more need to import samples manually one by one or use third party tool like MC-909SampleEditor ! just copy all prepared samples to the SmartMedia card or the MC-909 internal storage, bulk process all your samples in one go !
 - no more need to set loop tempo manually on the MC-909 ! use ACID metadata from WAV files
 - no more need to set loop points manually on the MC-909 ! use sustain loop points from WAV files
 - no more need to set sample root key manually on the MC-909 ! use filename
