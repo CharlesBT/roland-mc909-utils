@@ -29,7 +29,8 @@ Support ACID chunk in wav files:
 - Set ACID beatmapped tempo
 - Set ACIDidized loop length in beats
 - Set sample tempo based on previous ACID metadata, no more need to set loop tempo manually on the MC-909 !
-  NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
+
+NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 
 ### For samples oneshots
 
