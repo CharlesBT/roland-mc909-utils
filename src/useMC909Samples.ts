@@ -136,8 +136,9 @@ export function useMC909Samples() {
       const fmt: FMT = chunks.find((chunk) => chunk.type === 'format').value
       if (!fmt.channels) throw new Error(`channels is missing, ${file}`)
       if (!fmt.blockAlign) throw new Error(`blockAlign is missing, ${file}`)
-      if (fmt.sampleRate !== 44100) throw new Error(`SampleRate must be 44100, ${file}`)
-      if (fmt.bitsPerSample !== 16) throw new Error(`bitsPerSample must be 16, ${file}`)
+      if (!fmt.sampleRate) throw new Error(`sampleRate is missing, ${file}`)
+      // if (fmt.sampleRate !== 44100) throw new Error(`SampleRate must be 44100, ${file}`)
+      // if (fmt.bitsPerSample !== 16) throw new Error(`bitsPerSample must be 16, ${file}`)
 
       const { WaveFile } = wavefile // workaround to avoid ts-node issue
       const wav = new WaveFile(fs.readFileSync(file))
