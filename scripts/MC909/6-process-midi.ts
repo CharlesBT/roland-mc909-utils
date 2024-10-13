@@ -21,7 +21,7 @@ function writeFileSync(data: any, filename = 'output.json') {
 }
 
 const refData = getMidiData(REF_FILE)
-writeFileSync(refData, 'ref.json')
+// writeFileSync(refData, 'ref.json')
 const refFilteredData = getMidiData(REF_FILE)
 // writeFileSync(refFilteredData, 'ref-filtered.json')
 
@@ -33,6 +33,6 @@ const newData = getMidiData(NEW_FILE)
 const newInfo = getNewPatternInfo(newData)
 console.info(`New Pattern: measure(s)=${newInfo.measures}, beat(s)=${newInfo.beats}`)
 const refUpdatedData = getUpdatedMidiRefData(refFilteredData, newData)
-// writeFileSync(refUpdatedData, 'new-updated.json')
+writeFileSync(refUpdatedData, 'new-updated.json')
 // displayTrackInfo(refUpdatedData)
 writeMidiData(REF_UPDATED_FILE, refUpdatedData)
