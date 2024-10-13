@@ -1,3 +1,9 @@
+/*
+1 - ref.mid: exported pattern as SMF from MC909
+2 - new.mid: exported pattern as SMF from Studo One
+3 - reimport ref-updated.mid to MC909
+*/
+
 import fs from 'node:fs'
 import { join } from 'node:path'
 import { useMidifile } from '../../src/useMidiFile.js'
@@ -33,6 +39,6 @@ const newData = getMidiData(NEW_FILE)
 const newInfo = getNewPatternInfo(newData)
 console.info(`New Pattern: measure(s)=${newInfo.measures}, beat(s)=${newInfo.beats}`)
 const refUpdatedData = getUpdatedMidiRefData(refFilteredData, newData)
-writeFileSync(refUpdatedData, 'new-updated.json')
+writeFileSync(refUpdatedData, 'ref-updated.json')
 // displayTrackInfo(refUpdatedData)
 writeMidiData(REF_UPDATED_FILE, refUpdatedData)
