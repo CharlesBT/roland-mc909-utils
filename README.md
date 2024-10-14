@@ -58,7 +58,7 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 - set-acid-oneshot: set ACID oneshot metadata
 - check-acid-loop-tempo : check ACID loop tempo for a targetted tempo, set TARGET_TEMPO_BPM to the desired tempo
 
-## MC-909 Scripts
+## SAMPLES Scripts
 
 - 1-gather-stereo2mono : detect mono samples using 2 channels, they should be converted 1 mono channel for file size reduction as 2 channels are identical
 - 2-check-names : check if the samples are named correctly and respect the 16 characters limitation of the MC-909
@@ -75,6 +75,15 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 - for oneshots :
   - write loop points based on WAV sustain loop points
   - write root key based on filename
+
+## MIDI Scripts
+
+- 1-process-file : import midi from external sequencer to MC909 exported SMF file
+  1. ref.mid: exported pattern as SMF from MC909
+  2. new.mid: exported pattern as SMF from Studo One
+  3. reimport ref-updated.mid to MC909
+
+known issues : negative values that raise midi convertsion issue ca be avoided when avoiding noteof/noteoff overlapes (Quantize End in Studio One)
 
 ## DUMP CHUNK Script
 
