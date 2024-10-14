@@ -83,6 +83,8 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
   2. new.mid: exported pattern as SMF from Studo One
   3. reimport ref-updated.mid to MC909
 
+- 2-copy-template : copy COMP,MFX1,MFX2,REVERB config from template file to a pattern
+
 known issues : negative values that raise midi convertsion issue ca be avoided when avoiding noteof/noteoff overlapes (Quantize End in Studio One)
 
 ## DUMP CHUNK Script

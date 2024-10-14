@@ -1,11 +1,3 @@
-/*
-1 - ref.mid: exported pattern as SMF from MC909
-2 - new.mid: exported pattern as SMF from Studo One
-3 - reimport ref-updated.mid to MC909
-
-known issues : negative values that raise midi convertsion issue ca be avoided when avoiding noteof/noteoff overlapes (Quantize End in Studio One)
-*/
-
 import fs from 'node:fs'
 import { join } from 'node:path'
 import { useMidifile } from '../../src/useMidiFile.js'

@@ -100,26 +100,6 @@ export function useMidifile() {
     }
   }
 
-  function getFilteredSysExPartTrack(midiData: MidiData, ticks: number): MidiEvent[] {
-    const filteredSysExPartTrack: MidiEvent[] = []
-    const sysExPartTrack = midiData.tracks[1]
-    let delta = 0
-    for (const event of sysExPartTrack) {
-      switch (event.type) {
-        case 'trackName':
-          filteredSysExPartTrack.push(event)
-          delta += event.deltaTime
-          break
-      }
-    }
-    filteredSysExPartTrack.push({
-      deltaTime: TRACK_SETUP_TICK_LENGTH + ticks - delta,
-      meta: true,
-      type: 'endOfTrack',
-    })
-    return filteredSysExPartTrack
-  }
-
   function removeEndOfTrackMidiEvent(midiEvent: MidiEvent[]): MidiEvent[] {
     return midiEvent.filter((event) => event.type !== 'endOfTrack')
   }
@@ -261,8 +241,6 @@ export function useMidifile() {
     )
 
     updatedData.tracks.push(updatedSysExTrack)
-    // updatedData.tracks.push(getFilteredSysExPartTrack(refData, patternLength))
-    // updatedData.header.numTracks = refData.header.numTracks - 1
 
     for (const track of refData.tracks) {
       const trackName = getTrackName(track)
@@ -300,6 +278,30 @@ export function useMidifile() {
     return updatedData
   }
 
+  function getUpdatedMidiTemplateData(templateData: MidiData, patternData: MidiData): MidiData {
+    const updatedData: MidiData = {
+      header: patternData.header,
+      tracks: patternData.tracks,
+    }
+    // update SysExPart track
+    const templateSysExTrack = templateData.tracks[1]
+    const updatedSysExEvents: MidiEvent[] = []
+    for (const event of templateSysExTrack) {
+      if (event.type !== 'endOfTrack') {
+        updatedSysExEvents.push(event)
+      }
+    }
+    const patternLength = getTickLength(patternData.tracks[1])
+    const endOfTrackEvent: MidiEvent = {
+      deltaTime: patternLength - getTickLength(updatedSysExEvents),
+      meta: true,
+      type: 'endOfTrack',
+    }
+    updatedSysExEvents.push(endOfTrackEvent)
+    updatedData.tracks[1] = updatedSysExEvents
+    return updatedData
+  }
+
   function displayTrackInfo(midiData: MidiData) {
     for (const track of midiData.tracks) {
       const trackName = getTrackName(track)
@@ -317,6 +319,7 @@ export function useMidifile() {
     getRefPatternInfo,
     getNewPatternInfo,
     getUpdatedMidiRefData,
+    getUpdatedMidiTemplateData,
     displayTrackInfo,
   }
 }
