@@ -81,7 +81,7 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 - 1-process-midifile : import midi from external sequencer to MC909 exported SMF file
 
   1. ref.mid: exported pattern as SMF from MC909
-  2. new.mid: exported pattern as MIDI from your DAW (Studio One, FLStudio or others), each midi track must be nammed CHxx where ww is the part number of the MC909, each midi track can contain messages (note, CC, pitchbend, aftertouch, etc)
+  2. new.mid: exported pattern as MIDI from your DAW (Studio One, FLStudio or others), each midi track must be named CHxx where xx (1-16) is the part number of the MC909, each midi track can contain midi messages (note, CC, pitchbend, aftertouch, etc)
   3. reimport ref-updated.mid to MC909
 
 - 2-copy-midi-template : copy COMP,MFX1,MFX2,REVERB config from template file to a MC909 SMF pattern
