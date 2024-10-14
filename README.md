@@ -78,14 +78,14 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 
 ## MIDI Scripts
 
-- 1-process-file : import midi from external sequencer to MC909 exported SMF file
+- 1-process-midifile : import midi from external sequencer to MC909 exported SMF file
   1. ref.mid: exported pattern as SMF from MC909
-  2. new.mid: exported pattern as SMF from Studo One
+  2. new.mid: exported pattern as MIDI from your DAW (Studio One, FLStudio or others), each midi track must be nammed CHxx where ww is the part number of the MC909, each midi track can contain messages (note, CC, pitchbend, aftertouch, etc)
   3. reimport ref-updated.mid to MC909
 
-- 2-copy-template : copy COMP,MFX1,MFX2,REVERB config from template file to a MC909 SMF pattern
+- 2-copy-midi-template : copy COMP,MFX1,MFX2,REVERB config from template file to a MC909 SMF pattern
 
-known issues : negative values that raise midi convertsion issue ca be avoided when avoiding noteof/noteoff overlapes (Quantize End in Studio One)
+known issues : negative values that raise issue during midi conversion for noteon / noteoff overlaps, can be avoided when avoiding noteon/noteoff overlaps bu using quantize end function (Quantize End in Studio One), or manually drawing midi notes in your DAW to aavoid overlaps
 
 ## DUMP CHUNK Script
 
