@@ -79,6 +79,7 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 ## MIDI Scripts
 
 - 1-process-midifile : import midi from external sequencer to MC909 exported SMF file
+
   1. ref.mid: exported pattern as SMF from MC909
   2. new.mid: exported pattern as MIDI from your DAW (Studio One, FLStudio or others), each midi track must be nammed CHxx where ww is the part number of the MC909, each midi track can contain messages (note, CC, pitchbend, aftertouch, etc)
   3. reimport ref-updated.mid to MC909
@@ -87,9 +88,18 @@ NB: ACID chunk metadata can be edited manually with audio editor like SoundForge
 
 known issues : negative values that raise issue during midi conversion for noteon / noteoff overlaps, can be avoided when avoiding noteon/noteoff overlaps bu using quantize end function (Quantize End in Studio One), or manually drawing midi notes in your DAW to aavoid overlaps
 
-## DUMP CHUNK Script
+## DUMP CHUNK Script (debug)
 
 - dump-chunks: dump all chunks of a wav file to chunk.json format
+
+## MC909 MIDI settings
+
+Recommended MIDI settings to sequence the MC909 from your DAW :
+
+- Sync MC909 with you DAW sequencer clock
+  MC909 > System > Seq/MIDI> Sequencer Sync > Sync Mode : REMOTE
+- Allow MC909 to receive all 16 MIDI channel from your DAW
+  MC909 > System > Seq/MIDI> MIDI Rx > Remote Keyboard Switch : OFF
 
 ## Misc
 
@@ -98,3 +108,4 @@ Library and scripts based on the following packages:
 - wavefile https://www.npmjs.com/package/wavefile
 - uttori-audio-wave https://github.com/uttori/uttori-audio-wave
 - uttori-data-tools https://github.com/uttori/uttori-data-tools
+- midi-file https://github.com/carter-thaxton/midi-file
