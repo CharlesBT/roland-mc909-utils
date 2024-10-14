@@ -96,10 +96,8 @@ known issues : negative values that raise issue during midi conversion for noteo
 
 Recommended MIDI settings to sequence the MC909 from your DAW :
 
-- Sync MC909 with you DAW sequencer clock
-  MC909 > System > Seq/MIDI> Sequencer Sync > Sync Mode : REMOTE
-- Allow MC909 to receive all 16 MIDI channel from your DAW
-  MC909 > System > Seq/MIDI> MIDI Rx > Remote Keyboard Switch : OFF
+- Sync MC909 with you DAW sequencer clock : MC909 > System > Seq/MIDI> Sequencer Sync > Sync Mode : REMOTE
+- Allow MC909 to receive all 16 MIDI channel from your DAW : MC909 > System > Seq/MIDI> MIDI Rx > Remote Keyboard Switch : OFF
 
 ## Misc
 
