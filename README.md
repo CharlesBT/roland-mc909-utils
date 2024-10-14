@@ -1,4 +1,4 @@
-# Roland MC-909 Groovebox Scripts Utilities for ACIDizing and preparing samples | BULK IMPORT
+# Roland MC-909 Groovebox Audio & MIDI Scripts Utilities for ACIDizing and preparing samples, BULK IMPORT
 
 ## Description
 
