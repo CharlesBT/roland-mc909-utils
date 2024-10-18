@@ -253,11 +253,12 @@ export function useMidifile() {
           if (foundNewTrack) {
             const setupData = unMuteTrack(getSetupData(track))
             const shiftTicks = TRACK_SETUP_TICK_LENGTH - getTickLength(setupData)
-            let noteEvents = getNoteEventData(foundNewTrack) // extract note only
-            noteEvents = updateChannelNoteEventData(noteEvents, channelNumber - 1) // update channel number
-            noteEvents = shiftTickEvent(noteEvents, shiftTicks) // delay notes from setup measure
+            // let events = getNoteEventData(foundNewTrack) // extract note only
+            let events = foundNewTrack
+            events = updateChannelNoteEventData(events, channelNumber - 1) // update channel number
+            events = shiftTickEvent(events, shiftTicks) // delay events from setup measure
 
-            let updatedTrack = [...setupData, ...noteEvents]
+            let updatedTrack = [...setupData, ...events]
             updatedTrack = updatedTracktEndOfTrackWithPatternLength(
               updatedTrack,
               TRACK_SETUP_TICK_LENGTH + patternTicks,
