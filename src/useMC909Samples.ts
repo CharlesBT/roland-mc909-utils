@@ -120,7 +120,7 @@ export function useMC909Samples() {
       loopMode,
       loopTune: 0,
       key: typeof opts.key === 'number' ? opts.key : 60,
-      timestretchType: 9, // Auto sync method, Decreasing this value will optimize the sound for more rapid phrases, and increasing this value will optimize the sound for slower phrases.
+      timestretchType: 0, // Auto sync method, Decreasing this value will optimize the sound for more rapid phrases, and increasing this value will optimize the sound for slower phrases.
       bpm: typeof opts.bpm === 'number' ? opts.bpm : 0,
     })
 
