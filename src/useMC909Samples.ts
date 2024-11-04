@@ -226,23 +226,29 @@ export function useMC909Samples() {
     }
   }
 
-  function renameFiles(dir: string, index: number = 1) {
+  function renameFiles(dir: string, index: number = 1, removeZEmptySlots = true) {
     checkFilesExtension(dir)
     log(`Processing ${dir} ...`)
     log('Renaming files ...')
     const files = listFilesRecursiveSync(dir)
     for (const file of files) {
-      // const name = path.parse(file).name
-      const ext = path.extname(file)
-      const newName = `smpl${index.toString().padStart(4, '0')}${ext}`
-      const newFilename = path.join(path.dirname(file), newName)
-      fs.renameSync(file, newFilename)
-      log(newName)
-      const { WaveFile } = wavefile // workaround to avoid ts-node issue
-      const wav = new WaveFile(fs.readFileSync(newFilename))
-      const fmt = wav.fmt as any
-      if (fmt.numChannels === 2) index = index + 2
-      else index++
+      if (removeZEmptySlots && path.basename(file).toLowerCase().startsWith('z empty')) {
+        // remove empty slots
+        fs.unlinkSync(file)
+        index++
+      } else {
+        // const name = path.parse(file).name
+        const ext = path.extname(file)
+        const newName = `smpl${index.toString().padStart(4, '0')}${ext}`
+        const newFilename = path.join(path.dirname(file), newName)
+        fs.renameSync(file, newFilename)
+        log(newName)
+        const { WaveFile } = wavefile // workaround to avoid ts-node issue
+        const wav = new WaveFile(fs.readFileSync(newFilename))
+        const fmt = wav.fmt as any
+        if (fmt.numChannels === 2) index = index + 2
+        else index++
+      }
     }
   }
 
