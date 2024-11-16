@@ -3,7 +3,7 @@ import { writeReport } from '../../src/report.js'
 
 const SAMPLE_ROOT_DIR = 'H:/_MC909'
 const SAMPLE_START_INDEX = 3 // start index for the first sample e.g. 3 = smpl0003.wav
-const REMOVE_Z_EMPTY_SLOTS = true
+const REMOVE_Z_EMPTY_SLOTS = false
 
 const MC909Samples = useMC909Samples()
 MC909Samples.updateDirWithRolandChunk(SAMPLE_ROOT_DIR)
